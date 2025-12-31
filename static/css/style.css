@@ -1,4 +1,34 @@
-/* --- CSS Reset & Global Styles --- */
+/* --- CSS Variables & Theme Configuration --- */
+:root {
+    /* Color Palette */
+    --primary-color: #3b82f6;       /* Bright Blue (Main Brand Color) */
+    --primary-dark: #2563eb;        /* Darker Blue (Hover States) */
+    --accent-glow: rgba(59, 130, 246, 0.4); /* Glow effect color */
+    
+    --header-bg: #1e293b;           /* Dark Slate Blue (Header/Footer) */
+    --body-bg: #f0f4f8;             /* Light Grayish Blue (Background) */
+    --card-bg: #ffffff;             /* White (Card Background) */
+    
+    --text-main: #334155;           /* Dark Slate Gray (Main Text) */
+    --text-dark: #1e293b;           /* Darker Text (Headings) */
+    --text-muted: #94a3b8;          /* Light Gray (Footer/Labels) */
+    --text-light: #cbd5e1;          /* Very Light Gray (Icons in Footer) */
+    
+    --border-color: #e2e8f0;        /* Light Border */
+    --input-bg: #f1f5f9;            /* Input Icon Background */
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    --gradient-text: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    
+    /* Dimensions & Spacing */
+    --max-width: 1200px;
+    --border-radius: 10px;
+    --card-radius: 16px;
+    --transition-speed: 0.3s;
+}
+
+/* --- Global Reset --- */
 * {
     margin: 0;
     padding: 0;
@@ -7,8 +37,8 @@
 }
 
 body {
-    background-color: #f0f4f8;
-    color: #333;
+    background-color: var(--body-bg);
+    color: var(--text-main);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -16,15 +46,14 @@ body {
 
 /* --- Header Styles --- */
 header {
-    background: #1e293b;
-    /* Dark Slate Blue */
+    background: var(--header-bg);
     padding: 1rem 0;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
 }
 
-/* Decorative header background elements to match the "tech" vibe */
+/* Decorative background effect */
 header::before {
     content: '';
     position: absolute;
@@ -38,11 +67,10 @@ header::before {
 }
 
 .navbar {
-    max-width: 1200px;
+    max-width: var(--max-width);
     margin: 0 auto;
     display: flex;
     justify-content: center;
-    align-items: center;
     position: relative;
     z-index: 10;
 }
@@ -58,48 +86,34 @@ header::before {
 }
 
 .logo span {
-    color: #3b82f6;
-    /* Bright Blue */
+    color: var(--primary-color);
 }
 
 .logo i {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    background: var(--gradient-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 2rem;
 }
 
-/* --- Main Content Area --- */
+/* --- Main Layout --- */
 .container {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Centers the card vertically */
     padding: 2rem 1rem;
 }
 
-/* --- The Form Card --- */
+/* --- Card Component --- */
 .card {
-    background: #ffffff;
+    background: var(--card-bg);
     width: 100%;
     max-width: 700px;
-    border-radius: 16px;
+    border-radius: var(--card-radius);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     padding: 2.5rem;
     animation: fadeIn 0.6s ease-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .card-header {
@@ -110,7 +124,7 @@ header::before {
 .card-header h2 {
     font-size: 1.2rem;
     font-weight: 500;
-    color: #475569;
+    color: var(--text-main);
 }
 
 /* --- Form Elements --- */
@@ -122,37 +136,35 @@ header::before {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-dark);
     font-size: 0.95rem;
     padding-left: 2px;
 }
 
-/* The wrapper that holds the icon and the input */
 .input-wrapper {
     display: flex;
     align-items: center;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
     overflow: hidden;
-    /* Ensures the icon background doesn't bleed out */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
     background: #fff;
 }
 
 .input-wrapper:focus-within {
-    border-color: #3b82f6;
+    border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .input-icon {
-    background-color: #f1f5f9;
+    background-color: var(--input-bg);
     color: #64748b;
     padding: 0 1.2rem;
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-right: 1px solid #e2e8f0;
+    border-right: 1px solid var(--border-color);
     font-size: 1.1rem;
 }
 
@@ -163,25 +175,24 @@ header::before {
     height: 50px;
     padding: 0 1rem;
     font-size: 1rem;
-    color: #334155;
+    color: var(--text-main);
     background: transparent;
     appearance: none;
-    /* Removes default dropdown arrow to style custom if needed, usually kept for standard UI */
 }
 
-/* Fix for select placeholder color */
+/* Placeholder color fix */
 select.form-control:invalid {
-    color: #94a3b8;
+    color: var(--text-muted);
 }
 
-/* --- Button Styles --- */
+/* --- Buttons --- */
 .btn-predict {
     width: 100%;
     padding: 1rem;
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    background: var(--gradient-primary);
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: var(--border-radius);
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
@@ -199,68 +210,98 @@ select.form-control:invalid {
     transform: translateY(0);
 }
 
-/* --- Footer --- */
-footer {
-    text-align: center;
-    padding: 2rem;
-    color: #94a3b8;
-    font-size: 0.85rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .card {
-        padding: 1.5rem;
-    }
-
-    .logo {
-        font-size: 1.4rem;
-    }
-}
-
-/* --- Prediction Result Section --- */
+/* --- Result Section --- */
 .result-container {
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 2px dashed #e2e8f0; /* Creates a visual separation from the form */
+    border-top: 2px dashed var(--border-color);
     text-align: center;
-    opacity:   1; /* Hidden initially, JS should set this to 1 */
+    opacity: 1; 
     transition: opacity 0.5s ease;
 }
 
-/* A label class for "Estimated Price" text */
 .result-label {
     font-size: 1rem;
-    color: #64748b; /* Muted slate color */
+    color: var(--text-muted);
     font-weight: 500;
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-/* The actual price styling */
 .result-price {
-    font-size: 2.2rem; /* Large and readable */
+    font-size: 2.2rem;
     font-weight: 700;
-    color: #1e293b; /* Dark text */
+    color: var(--text-dark);
     margin: 0;
 }
 
-/* Target the span specifically to color the number */
 .result-price span {
-    color: #3b82f6; /* Matches your logo blue */
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    background: var(--gradient-text);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; /* Adds the gradient effect to text */
+    -webkit-text-fill-color: transparent;
 }
 
-/* Optional: Animation class for JS to add when result arrives */
 .result-container.show {
     opacity: 1;
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: var(--header-bg);
+    color: var(--text-muted);
+    margin-top: auto;
+    font-size: 0.9rem;
+}
+
+.social-media {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 1.3rem;
+    transition: all var(--transition-speed) ease;
+}
+
+.social-icon:hover {
+    background: var(--primary-color);
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px var(--accent-glow);
+}
+
+footer p {
+    opacity: 0.8;
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes popIn {
     0% { transform: scale(0.8); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+    .card { padding: 1.5rem; }
+    .logo { font-size: 1.4rem; }
 }
