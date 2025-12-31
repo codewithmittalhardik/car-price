@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Car Price Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="static/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <div class="logo">
+          <i class="fas fa-car-side"></i>
+          CAR <span>PRICE</span> PREDICTOR
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <h2>This app predicts the price of a car you want to sell. Try filling the details below:</h2>
+        </div>
+
+        <form action="#" method="POST" accept-charset="UTF-8" id="carForm">
+          <div class="form-group">
+            <label class="form-label">Select the company:</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <i class="fas fa-building"></i>
+              </div>
+              <select class="form-control" id="company" name="company" required onchange="load_car_models(this.id,'car_model')">
+                <option value="" disabled selected>Select Company</option>
+                {% for company in companies %}
+                  <option value="{{ company }}">{{ company }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Select the model:</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <i class="fas fa-car"></i>
+              </div>
+              <select class="form-control" id="car_model" name="car_model" required>
+                <option value="" disabled selected>Select the model</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Select Year of Purchase:</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <select class="form-control" id="year" name="year" required>
+                <option value="" disabled selected>Select Year</option>
+                {% for yr in years %}
+                  <option value="{{ yr }}">{{ yr }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Select the Fuel Type:</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <i class="fas fa-gas-pump"></i>
+              </div>
+              <select class="form-control" id="fuel_type" name="fuel_type" required>
+                <option value="" disabled selected>Select Fuel Type</option>
+                <option value="petrol">Petrol</option>
+                <option value="diesel">Diesel</option>
+                <option value="cng">CNG</option>
+                <option value="electric">Electric</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Enter the Number of Kilometers travelled:</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <i class="fas fa-tachometer-alt"></i>
+              </div>
+              <input type="number" class="form-control" id="kilometers" name="kilometers" placeholder="Enter the kilometres driven" min="0" required />
+            </div>
+          </div>
+
+          <button type="button" class="btn-predict" onclick="send_data()">Predict Price</button>
+        </form>
+        <div class="result-container" id="resultContainer">
+          <h3 class="result-price"><span id="prediction"></span></h3>
+        </div>
+      </div>
+    </div>
+
+    <footer>&copy; 2024 Car Price Predictor. All rights reserved.</footer>
+
+    <script>
+        function load_car_models(company_id, car_model_id) {
+            var company = document.getElementById(company_id).value;
+            var car_model_select = document.getElementById(car_model_id);
+            
+            // This gets the list of all models from Python/Flask
+            var all_models = {{ car_models | tojson }};
+            car_model_select.innerHTML = "";
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.innerHTML = "Select the model";
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            car_model_select.appendChild(defaultOption);
+            all_models.forEach(function(model) {
+                if (model.includes(company)) {
+                    var newOption = document.createElement("option");
+                    newOption.value = model;
+                    newOption.innerHTML = model;
+                    car_model_select.appendChild(newOption);
+                }
+            });
+        }
+
+        function send_data() {
+            var form = document.querySelector('form');
+            
+            // Validate all fields are filled
+            if (!form.checkValidity()) {
+                alert("Please fill in all required fields");
+                return;
+            }
+            
+            var fd = new FormData(form);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/predict', true);
+            
+            // Show "Predicting..." immediately
+            document.getElementById('prediction').innerHTML = "🔄 Predicting...";
+            document.getElementById('resultContainer').classList.add('show');
+            
+            xhr.onload = function() {
+                if(xhr.status === 200) {
+                    // Add a small delay for better UX (makes it feel like real processing)
+                    setTimeout(function() {
+                        document.getElementById('prediction').innerHTML = "Price: ₹" + xhr.responseText;
+                    }, 3000);
+                } else {
+                    document.getElementById('prediction').innerHTML = "❌ Error: Could not predict";
+                }
+            };
+            
+            xhr.onerror = function() {
+                document.getElementById('prediction').innerHTML = "❌ Network error";
+            };
+            
+            xhr.ontimeout = function() {
+                document.getElementById('prediction').innerHTML = "❌ Request timeout";
+            };
+            
+            xhr.send(fd);
+        }
+    </script>
+  </body>
+</html>
