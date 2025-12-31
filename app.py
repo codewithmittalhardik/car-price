@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request
+from whitenoise import WhiteNoise
 import pandas as pd
 import pickle
 import numpy as np
 
 app = Flask(__name__)
+app.wsgi_app = WhiteNoise(app.wsgi_app, root='static')
+
 car = pd.read_csv('Cleaned_Car_data.csv')
 
 # Load the trained model
